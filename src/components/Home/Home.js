@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Container, Grow, Grid, AppBar, TextField, Button, Paper } from '@material-ui/core';
 import Form from '../Form/Form';
 import Posts from '../Posts/Posts';
@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom';
 import ChipInput from 'material-ui-chip-input';
 import useStyles from './styles';
-import { getPosts, getPostsBySearch } from '../../actions/posts';
+import { getPostsBySearch } from '../../actions/posts';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
