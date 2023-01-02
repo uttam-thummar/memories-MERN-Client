@@ -1,4 +1,4 @@
-import { FETCH_ALL, FETCH_BY_SEARCH, FETCH_POST, CREATE, UPDATE, DELETE, LIKE, COMMENT } from '../constants/actionTypes';
+import { FETCH_ALL, FETCH_BY_SEARCH, FETCH_POST, CREATE, UPDATE, DELETE, LIKE, COMMENT, POSTS_MESSAGE, CLEAR_POST_MESSAGE } from '../constants/actionTypes';
 
 export default (state = { isLoading: true, posts: [] }, action) => {
     switch (action.type) {
@@ -12,6 +12,7 @@ export default (state = { isLoading: true, posts: [] }, action) => {
                 posts: action.payload.data,
                 currentPage: action.payload.currentPage,
                 numberOfPages: action.payload.numberOfPages,
+                post: null
             };
         case FETCH_BY_SEARCH:
             return { ...state, posts: action.payload.data };
@@ -35,6 +36,20 @@ export default (state = { isLoading: true, posts: [] }, action) => {
             return { ...state, posts: state.posts.map((post) => (post._id === action.payload._id ? action.payload : post)) };
         case DELETE:
             return { ...state, posts: state.posts.filter((post) => post._id !== action.payload) };
+        case POSTS_MESSAGE:
+            return {
+                ...state,
+                isAlert: true,
+                alertMessage: action.data.message,
+                alertType: action.data.type
+            }
+        case CLEAR_POST_MESSAGE:
+            return {
+                ...state,
+                isAlert: false,
+                alertMessage: null,
+                alertType: null
+            }
         default:
             return state;
     }

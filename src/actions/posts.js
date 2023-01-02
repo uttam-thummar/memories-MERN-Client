@@ -1,4 +1,4 @@
-import { START_LOADING, END_LOADING, FETCH_ALL, FETCH_POST, FETCH_BY_SEARCH, CREATE, UPDATE, DELETE, LIKE, COMMENT } from '../constants/actionTypes';
+import { START_LOADING, END_LOADING, FETCH_ALL, FETCH_POST, FETCH_BY_SEARCH, CREATE, UPDATE, DELETE, LIKE, COMMENT, POSTS_MESSAGE } from '../constants/actionTypes';
 import * as api from '../api/index.js';
 
 export const getPost = (id) => async (dispatch) => {
@@ -8,7 +8,8 @@ export const getPost = (id) => async (dispatch) => {
         dispatch({ type: FETCH_POST, payload: { post: data } });
         dispatch({ type: END_LOADING });
     } catch (error) {
-        console.log(error);
+        dispatch({ type: POSTS_MESSAGE, data: { message: error.response.data.message, type: 'error' } });
+        // console.log(error);
     }
 };
 
@@ -19,7 +20,8 @@ export const getPosts = (page) => async (dispatch) => {
         dispatch({ type: FETCH_ALL, payload: { data, currentPage, numberOfPages } });
         dispatch({ type: END_LOADING });
     } catch (error) {
-        console.log(error);
+        dispatch({ type: POSTS_MESSAGE, data: { message: error.response.data.message, type: 'error' } });
+        // console.log(error);
     }
 };
 
@@ -30,7 +32,8 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
         dispatch({ type: FETCH_BY_SEARCH, payload: { data } });
         dispatch({ type: END_LOADING });
     } catch (error) {
-        console.log(error);
+        dispatch({ type: POSTS_MESSAGE, data: { message: error.response.data.message, type: 'error' } });
+        // console.log(error);
     }
 };
 
@@ -38,11 +41,15 @@ export const createPost = (post, history) => async (dispatch) => {
     try {
         dispatch({ type: START_LOADING });
         const { data } = await api.createPost(post);
-        history.push(`/posts/${data._id}`);
+        dispatch({ type: POSTS_MESSAGE, data: { message: 'Post Created, Redirecting...', type: 'success' } });
+        setTimeout(() => {
+            history.push(`/posts/${data._id}`);
+        }, 2000)
         dispatch({ type: CREATE, payload: data });
         dispatch({ type: END_LOADING });
     } catch (error) {
-        console.log(error);
+        dispatch({ type: POSTS_MESSAGE, data: { message: error.response.data.message, type: 'error' } })
+        // console.log(error);
     }
 };
 
@@ -50,8 +57,10 @@ export const updatePost = (id, post) => async (dispatch) => {
     try {
         const { data } = await api.updatePost(id, post);
         dispatch({ type: UPDATE, payload: data });
+        dispatch({ type: POSTS_MESSAGE, data: { message: 'Post Updated', type: 'success' } });
     } catch (error) {
-        console.log(error);
+        dispatch({ type: POSTS_MESSAGE, data: { message: 'Could not update, please try again later', type: 'error' } })
+        // console.log(error);
     }
 };
 
@@ -79,6 +88,7 @@ export const deletePost = (id) => async (dispatch) => {
     try {
         await api.deletePost(id);
         dispatch({ type: DELETE, payload: id });
+        dispatch({ type: POSTS_MESSAGE, data: { message: 'Post Deleted', type: 'success' } });
     } catch (error) {
         console.log(error);
     }

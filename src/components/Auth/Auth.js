@@ -3,13 +3,14 @@ import { Avatar, Button, Paper, Grid, Typography, Container } from '@material-ui
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
 import useStyles from './styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Input from './Input';
 import Icon from './Icon';
 import { gapi } from 'gapi-script';
 import { AUTH } from '../../constants/actionTypes';
 import { signin, signup } from '../../actions/auth';
+import { Alert } from '@material-ui/lab';
 
 
 const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' };
@@ -18,6 +19,7 @@ const Auth = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
+    const {isError, errors, errorType} = useSelector((store) => store.auth);
     const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
     const [isSignup, setIsSignup] = useState(false);
@@ -69,6 +71,7 @@ const Auth = () => {
     return (
         <Container component="main" maxWidth="xs">
             <Paper className={classes.paper} elevation={3}>
+            {isError && <Alert severity={errorType}>{errors}</Alert>}
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
                 </Avatar>

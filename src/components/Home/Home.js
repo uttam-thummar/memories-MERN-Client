@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Grow, Grid, AppBar, TextField, Button, Paper } from '@material-ui/core';
 import Form from '../Form/Form';
 import Posts from '../Posts/Posts';
 import Pagination from '../Pagination';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom';
 import ChipInput from 'material-ui-chip-input';
 import useStyles from './styles';
 import { getPostsBySearch } from '../../actions/posts';
+import { Alert } from '@material-ui/lab';
+import { CLEAR_POST_MESSAGE } from '../../constants/actionTypes';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -20,6 +22,15 @@ const Home = () => {
     const history = useHistory();
     const page = query.get('page') || 1;
     const searchQuery = query.get('searchQuery');
+
+    const { isAlert, alertMessage, alertType } = useSelector(store => store.posts);
+    useEffect(() => {
+        if (isAlert) {
+            setTimeout(() => {
+                dispatch({ type: CLEAR_POST_MESSAGE });
+            }, 2000);
+        }
+    }, [isAlert, dispatch]);
 
     const [currentId, setCurrentId] = useState(0);
     const [search, setSearch] = useState('');
@@ -44,6 +55,7 @@ const Home = () => {
     return (
         <Grow in>
             <Container maxWidth="xl">
+                {isAlert && <Alert severity={alertType} className={classes.alert}>{alertMessage}</Alert>}
                 <Grid container justifyContent="space-between" alignItems="stretch" spacing={3} className={classes.gridContainer}>
                     <Grid item xs={12} sm={6} md={9}>
                         <Posts setCurrentId={setCurrentId} />

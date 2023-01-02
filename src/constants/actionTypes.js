@@ -8,6 +8,10 @@ export const LIKE = 'LIKE';
 export const COMMENT = 'COMMENT';
 export const END_LOADING = 'END_LOADING';
 export const START_LOADING = 'START_LOADING';
+export const POSTS_MESSAGE = 'POST_MESSAGE';
+export const CLEAR_POST_MESSAGE = 'CLEAR_POST_MESSAGE';
 
 export const AUTH = 'AUTH';
+export const AUTH_MESSAGE = 'AUTH_MESSAGE'
+export const CLEAR_AUTH_MESSAGE = 'CLEAR_AUTH_MESSAGE'
 export const LOGOUT = 'LOGOUT';
